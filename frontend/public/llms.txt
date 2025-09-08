@@ -1,0 +1,7 @@
+## Pages
+- [- Book Now | PadelBook Pakistan](/courtdetails): No description available
+- [Court Owner Dashboard - PadelBook Pakistan](/courtownerdashboard): Manage your padel courts, view bookings, and track revenue on PadelBook Pakistan.
+- [Login - PadelBook Pakistan](/login): Login to your PadelBook Pakistan account. Access your bookings or manage your padel court business.
+- [My Dashboard - PadelBook Pakistan](/userdashboard): View your padel court bookings, manage reservations, and track your playing history on PadelBook Pakistan.
+- [PadelBook Pakistan - Find & Book Premium Padel Courts](/home): Discover and book the best padel courts across Pakistan. Premium facilities in Karachi, Lahore, Islamabad and more.
+- [Register - PadelBook Pakistan](/register): Join PadelBook Pakistan. Register as a player to book courts or as a court owner to manage your business.

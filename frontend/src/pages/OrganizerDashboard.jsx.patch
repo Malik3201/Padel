@@ -1,0 +1,387 @@
+baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api',
+  timeout: 50000,
+});
+
+// Add request interceptor to include auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken') || "dev-organizer";
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+=======
+
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api',
+  timeout: 50000,
+});
+
+// Add request interceptor to include auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+>>>>>>> REPLACE
+
+<<<<<<< SEARCH
+  const [formData, setFormData] = useState({
+    title: "",
+    location: "",
+    startDate: "",
+    entryFee: "",
+    skillLevel: "Beginner"
+  });
+=======
+  const [formData, setFormData] = useState({
+    title: "",
+    location: "",
+    startDate: "",
+    endDate: "",
+    registrationDeadline: "",
+    entryFee: "",
+    skillLevel: "Beginner"
+  });
+>>>>>>> REPLACE
+
+<<<<<<< SEARCH
+  // ✅ Add/Edit tournament
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      let response;
+      if (isEditing) {
+        response = await api.put(`/tournaments/${editingId}`, formData);
+        console.log("Tournament updated:", response.data);
+        // Update the tournament in the list
+        setTournaments((prev) =>
+          prev.map((t) => (t._id === editingId ? response.data.tournament : t))
+        );
+      } else {
+        response = await api.post("/tournaments", formData);
+        console.log("Tournament created:", response.data);
+        // Agar backend naya tournament return kare
+        if (response.data.tournament) {
+          setTournaments((prev) => [...prev, response.data.tournament]);
+        } else {
+          fetchMyTournaments();
+        }
+      }
+
+      // Reset form
+      setFormData({
+        title: "",
+        location: "",
+        startDate: "",
+        entryFee: "",
+        skillLevel: "Beginner"
+      });
+      setIsEditing(false);
+      setEditingId(null);
+    } catch (err) {
+      console.error("Error saving tournament", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+=======
+  // ✅ Add/Edit tournament
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage("");
+    // Basic validation
+    if (!formData.title || !formData.location || !formData.startDate || !formData.endDate || !formData.registrationDeadline || !formData.entryFee) {
+      setErrorMessage("Please fill in all required fields.");
+      return;
+    }
+    try {
+      setIsLoading(true);
+      let response;
+      if (isEditing) {
+        response = await api.put(`/tournaments/${editingId}`, formData);
+        setTournaments((prev) =>
+          prev.map((t) => (t._id === editingId ? response.data.data : t))
+        );
+      } else {
+        response = await api.post("/tournaments", formData);
+        if (response.data.data) {
+          setTournaments((prev) => [...prev, response.data.data]);
+        } else {
+          fetchMyTournaments();
+        }
+      }
+      setFormData({
+        title: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        registrationDeadline: "",
+        entryFee: "",
+        skillLevel: "Beginner"
+      });
+      setIsEditing(false);
+      setEditingId(null);
+    } catch (err) {
+      setErrorMessage(err.response?.data?.message || "Error saving tournament");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+>>>>>>> REPLACE
+
+<<<<<<< SEARCH
+  // ✅ Edit tournament
+  const handleEdit = (tournament) => {
+    setIsEditing(true);
+    setEditingId(tournament._id);
+    setFormData({
+      title: tournament.title || "",
+      location: tournament.location || "",
+      startDate: tournament.startDate ? new Date(tournament.startDate).toISOString().split('T')[0] : "",
+      entryFee: tournament.entryFee || "",
+      skillLevel: tournament.skillLevel || "Beginner"
+    });
+  };
+=======
+  // ✅ Edit tournament
+  const handleEdit = (tournament) => {
+    setIsEditing(true);
+    setEditingId(tournament._id);
+    setFormData({
+      title: tournament.title || "",
+      location: tournament.location || "",
+      startDate: tournament.startDate ? new Date(tournament.startDate).toISOString().split('T')[0] : "",
+      endDate: tournament.endDate ? new Date(tournament.endDate).toISOString().split('T')[0] : "",
+      registrationDeadline: tournament.registrationDeadline ? new Date(tournament.registrationDeadline).toISOString().split('T')[0] : "",
+      entryFee: tournament.entryFee || "",
+      skillLevel: tournament.skillLevel || "Beginner"
+    });
+    setErrorMessage("");
+  };
+>>>>>>> REPLACE
+
+<<<<<<< SEARCH
+      <br /><br />
+      <h1 className="text-3xl font-bold mb-8 text-white">Organizer Dashboard</h1>
+
+      {/* Loading indicator */}
+      {isLoading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+            <p className="mt-2 text-gray-700">Loading...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Form */}
+      <div className="bg-white/30 shadow-lg rounded-2xl p-8 w-full max-w-2xl mb-10">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+          {isEditing ? "Edit Tournament" : "Add New Tournament"}
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Tournament Title"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black placeholder-gray-500"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={formData.location}
+            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black placeholder-gray-500"
+            required
+          />
+          <input
+            type="date"
+            placeholder="Start Date"
+            value={formData.startDate}
+            onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black"
+            required
+          />
+          <input
+            type="number"
+            placeholder="Entry Fee"
+            value={formData.entryFee}
+            onChange={(e) => setFormData({ ...formData, entryFee: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black placeholder-gray-500"
+            required
+          />
+          <select
+            value={formData.skillLevel}
+            onChange={(e) => setFormData({ ...formData, skillLevel: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black"
+          >
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+          <div className="flex space-x-4">
+            <button
+              type="submit"
+              className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-3 rounded-lg flex-1 font-semibold shadow-md"
+              disabled={isLoading}
+            >
+              {isLoading ? (isEditing ? "Updating..." : "Adding...") : (isEditing ? "Update Tournament" : "Add Tournament")}
+            </button>
+            {isEditing && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditingId(null);
+                  setFormData({
+                    title: "",
+                    location: "",
+                    startDate: "",
+                    entryFee: "",
+                    skillLevel: "Beginner"
+                  });
+                }}
+                className="bg-gray-500 hover:bg-gray-600 transition text-white px-6 py-3 rounded-lg font-semibold shadow-md"
+                disabled={isLoading}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+=======
+      <br /><br />
+      <h1 className="text-3xl font-bold mb-8 text-white">Organizer Dashboard</h1>
+
+      {errorMessage && (
+        <div className="bg-red-600 text-white p-3 rounded mb-4 max-w-2xl w-full text-center">
+          {errorMessage}
+        </div>
+      )}
+
+      {/* Loading indicator */}
+      {isLoading && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
+            <p className="mt-2 text-gray-700">Loading...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Form */}
+      <div className="bg-white/30 shadow-lg rounded-2xl p-8 w-full max-w-2xl mb-10">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">
+          {isEditing ? "Edit Tournament" : "Add New Tournament"}
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Tournament Title"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black placeholder-gray-500"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={formData.location}
+            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black placeholder-gray-500"
+            required
+          />
+          <input
+            type="date"
+            placeholder="Start Date"
+            value={formData.startDate}
+            onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black"
+            required
+          />
+          <input
+            type="date"
+            placeholder="End Date"
+            value={formData.endDate}
+            onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black"
+            required
+          />
+          <input
+            type="date"
+            placeholder="Registration Deadline"
+            value={formData.registrationDeadline}
+            onChange={(e) => setFormData({ ...formData, registrationDeadline: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black"
+            required
+          />
+          <input
+            type="number"
+            placeholder="Entry Fee"
+            value={formData.entryFee}
+            onChange={(e) => setFormData({ ...formData, entryFee: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black placeholder-gray-500"
+            required
+          />
+          <select
+            value={formData.skillLevel}
+            onChange={(e) => setFormData({ ...formData, skillLevel: e.target.value })}
+            className="border border-gray-300 rounded-lg p-3 w-full text-black"
+          >
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+          <div className="flex space-x-4">
+            <button
+              type="submit"
+              className="bg-green-600 hover:bg-green-700 transition text-white px-6 py-3 rounded-lg flex-1 font-semibold shadow-md"
+              disabled={isLoading}
+            >
+              {isLoading ? (isEditing ? "Updating..." : "Adding...") : (isEditing ? "Update Tournament" : "Add Tournament")}
+            </button>
+            {isEditing && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsEditing(false);
+                  setEditingId(null);
+                  setFormData({
+                    title: "",
+                    location: "",
+                    startDate: "",
+                    endDate: "",
+                    registrationDeadline: "",
+                    entryFee: "",
+                    skillLevel: "Beginner"
+                  });
+                  setErrorMessage("");
+                }}
+                className="bg-gray-500 hover:bg-gray-600 transition text-white px-6 py-3 rounded-lg font-semibold shadow-md"
+                disabled={isLoading}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
