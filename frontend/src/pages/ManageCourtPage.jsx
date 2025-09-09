@@ -18,9 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/components/ui/use-toast";
 import Navigation from "@/components/Navigation";
-import axios from "axios";
-
-const API_BASE = "http://localhost:5001/api"; // ⚡ apna backend URL lagao
+import api from "@/axiosInstense";
 
 const ManageCourtPage = () => {
   const { id } = useParams();
@@ -35,19 +33,12 @@ const ManageCourtPage = () => {
   useEffect(() => {
     const fetchCourtAndBookings = async () => {
       try {
-        const token = localStorage.getItem("token");
-
         // Court details
-        const courtRes = await axios.get(`${API_BASE}/courts/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const courtRes = await api.get(`/courts/${id}`);
         setCourt(courtRes.data);
 
         // Bookings for this court
-        const bookingsRes = await axios.get(
-          `${API_BASE}/bookings/court/my-bookings`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const bookingsRes = await api.get(`/bookings/court/my-bookings`);
 
         const courtBookings = bookingsRes.data.filter(
           (b) => b.courtId === id
@@ -84,11 +75,7 @@ const ManageCourtPage = () => {
   const handleSaveChanges = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-
-      await axios.put(`${API_BASE}/courts/${id}`, court, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await api.put(`/courts/${id}`, court);
 
       toast({
         title: "Success!",

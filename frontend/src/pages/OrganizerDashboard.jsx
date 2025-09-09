@@ -1,34 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Navigation from "@/components/Navigation";
-
-// ✅ Axios instance setup
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api",
-  timeout: 50000,
-});
-
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("authToken");
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  }
-);
+import api from "@/axiosInstense";
 
 const OrganizerDashboard = () => {
   const [tournaments, setTournaments] = useState([]);

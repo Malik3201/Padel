@@ -2,7 +2,7 @@
 
 ## 🚀 Base URL
 ```
-http://localhost:5000/api
+http://localhost:5001/api
 ```
 
 ## 📋 Table of Contents
@@ -769,8 +769,8 @@ Authorization: Bearer <your_jwt_token>
 ## 🚀 Getting Started
 
 1. Start the backend server: `npm run dev`
-2. Server runs on: `http://localhost:5000`
-3. API base URL: `http://localhost:5000/api`
+2. Server runs on: `http://localhost:5001`
+3. API base URL: `http://localhost:5001/api`
 4. Test the API with tools like Postman or curl
 
 ---

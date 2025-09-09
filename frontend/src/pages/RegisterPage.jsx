@@ -10,9 +10,7 @@ import { Label } from "@/components/ui/label.jsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.jsx";
 import { useToast } from "@/components/ui/use-toast";
 import Navigation from "@/components/Navigation";
-import axios from "axios";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:5001/api";
+import api from "@/axiosInstense";
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -79,7 +77,7 @@ const RegisterPage = () => {
         }),
       };
 
-      const res = await axios.post(`${API_BASE}/auth/register`, registrationData, {
+      const res = await api.post(`/auth/register`, registrationData, {
         withCredentials: true,
       });
 
